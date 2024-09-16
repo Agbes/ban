@@ -1,0 +1,134 @@
+{% extends "admins/client/dashbord_client.html" %}
+{% load custom_filters i18n %}
+{% block history %}
+<h3>{% trans "Liste de tous vos demandes de prêts" %}</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>{% trans "Demande" %}</th>
+            <th>{% trans "Périodes" %}</th>
+            <th>{% trans "Facture" %}</th>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Statut" %}</th>
+            <th>{% trans "Paiement" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for liste in listes %}
+        <tr>
+            <td>{{ liste.montant_demande }} €</td>
+            <td>{{ liste.duree }} {% trans "mois" %}</td>
+            <td>{{ liste.montant_demande|multiply:liste.taux_interet|floatformat:2 }} €</td>
+            <td>{{ liste.date_demande|date:"d/m/Y H:i" }}</td>
+            <td>{{ liste.statut }}</td>
+            <td>
+                {% if liste.paiement_effectue %}
+                    <span style="color: gray;">{% trans "Effectif" %}</span>
+                {% else %}
+                    <select class="payment-method" data-id="{{ liste.id }}">
+                        <option value="">{% trans "Choisir un mode de paiement" %}</option>
+                        <option value="card">{% trans "Carte bancaire" %}</option>
+                        <option value="virement">{% trans "Virement" %}</option>
+                        <option value="crypto">{% trans "Cryptomonnaie" %}</option>
+                    </select>
+                    <button style="text-decoration: none; color: white; background-color: green;" 
+                            class="checkout-button" 
+                            data-id="{{ liste.id }}" 
+                            disabled>
+                        {% trans "Payer" %}
+                    </button>
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">{% trans "Aucun virement en cours." %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script type="text/javascript">
+    const stripe = Stripe('{{ stripe_public_key }}');
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const checkoutButtons = document.querySelectorAll('.checkout-button');
+
+        paymentMethods.forEach(select => {
+            select.addEventListener('change', function() {
+                const button = this.nextElementSibling;
+                button.disabled = !this.value;
+            });
+        });
+
+        checkoutButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const select = this.previousElementSibling;
+                const paymentMethod = select.value;
+                const pretId = this.getAttribute('data-id');
+
+                if (paymentMethod === 'card') {
+                    // Traitement spécial pour la carte bancaire avec Stripe
+                    handleCardPayment(pretId);
+                } else {
+                    // Traitement pour les autres méthodes de paiement
+                    console.log(Paiement pour l'ID ${pretId} avec la méthode ${paymentMethod});
+                    // Ajoutez ici la logique pour les autres méthodes de paiement
+                }
+            });
+        });
+    });
+
+    function handleCardPayment(pretId) {
+        if (pretId) {
+            fetch("{% url 'create-checkout-session' 0 %}".replace("0", pretId), {
+                method: "POST",
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(function (response) {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.error || 'Erreur du serveur');
+                    });
+                }
+                return response.json();
+            })
+            .then(function (session) {
+                if (!session.sessionId) {
+                    throw new Error('Session ID manquant dans la réponse du serveur');
+                }
+                return stripe.redirectToCheckout({ sessionId: session.sessionId });
+            })
+            .catch(function (error) {
+                console.error("Erreur:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: error.message
+                });
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Erreur',
+                text: "L'ID du prêt est manquant."
+            });
+        }
+    }
+</script>
+
+
+{% endblock %}

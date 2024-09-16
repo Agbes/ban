@@ -1,0 +1,110 @@
+{% extends "admins/client/dashbord_client.html" %}
+
+{% block history %}
+<h3>Create Crypto Payment</h3>
+<form id="crypto-payment-form" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Pay with Crypto</button>
+</form>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('crypto-payment-form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fetch('{% url "create_crypto_payment" %}', {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirect_url;
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.error,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    });
+    
+    function checkPaymentStatus(paymentId) {
+        fetch(`{% url "check_payment_status" %}?payment_id=${paymentId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.status === 'complete') {
+                    Swal.fire({
+                        title: 'Payment Successful!',
+                        text: 'Your crypto payment has been completed successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/dashboard/';  // Redirect to dashboard or appropriate page
+                        }
+                    });
+                } else if (data.status === 'invalid') {
+                    Swal.fire({
+                        title: 'Payment Failed',
+                        text: 'Your payment was not successful. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    // Payment is still pending, check again after a delay
+                    setTimeout(() => checkPaymentStatus(paymentId), 5000);  // Check again after 5 seconds
+                }
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'An unexpected error occurred while checking payment status.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
+    }
+    
+    // Check for payment_id in URL parameters when page loads
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paymentId = urlParams.get('payment_id');
+        if (paymentId) {
+            checkPaymentStatus(paymentId);
+        }
+    };
+    </script>
+    
+{% endblock %}

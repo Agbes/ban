@@ -1,0 +1,93 @@
+{% extends "admins/administation/dashbord_admin.html" %}
+
+{% block history %}
+<h3>La liste de tous vos clients</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Nom & Prénoms</th>
+            <th>Numéro du compte</th>
+            <th>Solde</th>
+            <th>Créditer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for compte in comptes %}
+        <tr>
+            <td>{{ compte.user.first_name }} {{ compte.user.last_name }}</td>
+            <td>{{ compte.numero_compte }}</td>
+            <td>{{ compte.solde }} €</td>
+            <td>
+                <button class="btn btn-primary credit-button" data-compte-id="{{ compte.id }}" 
+                        data-nom="{{ compte.user.first_name }} {{ compte.user.last_name }}" 
+                        data-numero="{{ compte.numero_compte }}">
+                    Créditer
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.credit-button');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const compteId = this.getAttribute('data-compte-id');
+            const nom = this.getAttribute('data-nom');
+            const numero = this.getAttribute('data-numero');
+            
+            Swal.fire({
+                title: `Créditer le compte de ${nom}`,
+                html: `
+                    <p>Compte bancaire : ${numero}</p>
+                    <form id="credit-form">
+                        <div class="form-group">
+                            <label for="montant">Montant à créditer (€)</label>
+                            <input type="number" class="form-control" id="montant" name="montant" step="0.01" required>
+                        </div>
+                    </form>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Créditer le compte',
+                cancelButtonText: 'Annuler',
+                preConfirm: () => {
+                    const montant = Swal.getPopup().querySelector('#montant').value;
+                    if (!montant) {
+                        Swal.showValidationMessage('Veuillez entrer un montant');
+                    }
+                    return { montant: montant };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Envoyer la requête AJAX pour créditer le compte
+                    fetch(`{% url 'crediter_compte' 0 %}`.replace('0', compteId), {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: `montant=${result.value.montant}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Succès', data.message, 'success').then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Erreur', data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire('Erreur', 'Une erreur s\'est produite', 'error');
+                    });
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

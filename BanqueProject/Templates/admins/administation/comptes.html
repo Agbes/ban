@@ -1,0 +1,30 @@
+{% extends "admins/administation/dashbord_admin.html" %}
+
+
+{% block history %}
+<h3>La liste de tous vos clients</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Nom & Prénoms</th>
+            <th>Pays</th>
+            <th>Email</th>
+            <th>Comptes</th>
+            <th>Voir</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for profile in user_profiles %}
+        <tr>
+            <td>{{ profile.last_name }} {{ profile.first_name }}</td>
+            <td>{{ profile.nationality }}</td>
+            <td>{{ profile.user.email }}</td>
+            <td style="color: {% if profile.user.is_active %}green{% else %}red{% endif %};">
+                {% if profile.user.is_active %}Actif{% else %}Inactif{% endif %}
+            </td>
+            <td><a href="{% url 'dashbord_user' profile.user.id %}" style="text-decoration: none;color: black;">Consulter ...</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock  %}

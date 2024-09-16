@@ -1,0 +1,94 @@
+{% extends "admins/administation/dashbord_admin.html" %}
+
+{% block history %}
+<h3>Status des différents comptes</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Nom & Prénoms</th>
+            <th>Statut</th>
+            <th>Modifier</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for profile in user_profiles %}
+        <tr>
+            <td>{{ profile.last_name }} {{ profile.first_name }}</td>
+            <td class="status-cell" data-id="{{ profile.id }}">{{ profile.statut }}</td>
+            <td>
+                <button style="text-decoration: none; color: white; background-color: green;" 
+                class="checkout-button" 
+                data-id="{{ profile.id }}">
+                    Modifier
+                </button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.checkout-button');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            Swal.fire({
+                title: 'Modifier le statut',
+                input: 'select',
+                inputOptions: {
+                    'Vérifier': 'Vérifier',
+                    'Non vérifier': 'Non vérifier',
+                    'En attente de vérification': 'En attente de vérification',
+                    'En cours de vérification': 'En cours de vérification'
+                },
+                inputPlaceholder: 'Sélectionnez un statut',
+                showCancelButton: true,
+                confirmButtonText: 'Modifier',
+                cancelButtonText: 'Annuler',
+                showLoaderOnConfirm: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Vous devez choisir un statut!'
+                    }
+                },
+                preConfirm: (status) => {
+                    return fetch('{% url "statut_compte" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: `user_id=${userId}&status=${status}`
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Erreur de requête: ${error}`
+                        )
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed && result.value.success) {
+                    Swal.fire('Modifié!', 'Le statut a été mis à jour.', 'success');
+                    // Mise à jour du statut dans le tableau
+                    const statusCell = document.querySelector(`.status-cell[data-id="${userId}"]`);
+                    if (statusCell) {
+                        statusCell.textContent = result.value.new_status;
+                    }
+                } else if (result.isConfirmed && !result.value.success) {
+                    Swal.fire('Erreur!', result.value.message, 'error');
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

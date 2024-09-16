@@ -1,0 +1,14 @@
+{% extends "admins/administation/dashbord_admin.html" %}
+
+
+{% block history %}
+<h3>Créditer le commpte de  {{compte.user.first_name}} {{compte.user.last_name}}: Compte banquaire : {{compte.numero_compte}}</h3>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="montant">Montant à créditer (€)</label>
+        <input type="number" class="form-control" id="montant" name="montant" step="0.01" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Créditer le compte</button>
+</form>
+{% endblock  %}

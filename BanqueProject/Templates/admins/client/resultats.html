@@ -1,0 +1,76 @@
+{% extends "admins/client/dashbord_client.html" %}
+
+{% block history %}
+<div id="payment-result-container">
+    <!-- Le contenu sera rempli par JavaScript -->
+</div>
+
+{% endblock  %}
+
+{% block script %}
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showPaymentResult() {
+        const status = "{{ status }}";
+        const sessionId = "{{ session_id }}";
+        const error = "{{ error|escapejs }}";
+        const customerId = "{{ customer.id|default:'' }}";
+        const customerEmail = "{{ customer.email|default:'' }}";
+    
+        let swalConfig = {};
+    
+        if (status === 'success') {
+            swalConfig = {
+                icon: 'success',
+                title: 'Paiement Réussi',
+                html: `
+                    <p>Votre paiement a été traité avec succès.</p>
+                    ${customerId ? `<p>ID Client: ${customerId}</p>` : ''}
+                    ${customerEmail ? `<p>Email: ${customerEmail}</p>` : ''}
+                `,
+                confirmButtonText: 'OK'
+            };
+        } else if (status === 'cancel') {
+            swalConfig = {
+                icon: 'warning',
+                title: 'Paiement Annulé',
+                text: 'Votre paiement a été annulé.',
+                confirmButtonText: 'Compris'
+            };
+        } else {
+            swalConfig = {
+                icon: 'error',
+                title: 'Erreur de Paiement',
+                text: 'Une erreur s\'est produite lors du traitement de votre paiement.',
+                footer: error ? `Détails de l'erreur: ${error}` : '',
+                confirmButtonText: 'OK'
+            };
+        }
+    
+        Swal.fire(swalConfig).then((result) => {
+            if (result.isConfirmed) {
+                // Redirection optionnelle après confirmation
+                window.location.href = "{% url 'list_demande'%}";
+            }
+        });
+    }
+    
+    // Vérifier si SweetAlert2 est chargé
+    if (typeof Swal !== 'undefined') {
+        showPaymentResult();
+    } else {
+        // Si SweetAlert2 n'est pas chargé, attendre qu'il le soit
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof Swal !== 'undefined') {
+                showPaymentResult();
+            } else {
+                console.error('SweetAlert2 n\'a pas pu être chargé');
+                // Afficher un message d'erreur simple si SweetAlert2 ne se charge pas
+                alert('Une erreur est survenue lors de l\'affichage du résultat du paiement.');
+            }
+        });
+    }
+    </script>
+{% endblock %}

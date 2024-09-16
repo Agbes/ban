@@ -1,0 +1,347 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Banque En Ligne</title>
+    <link rel="stylesheet" href="{% static 'css/banque.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="container top-container">
+            <a href="tel:+33123456789"><i class="fas fa-phone"></i> +33 1 23 45 67 89</a>
+            <a href="mailto:contact@mabanque.fr"><i class="fas fa-envelope"></i> contact@mabanque.fr</a>
+        </div>
+    </div>
+    <header>
+        <nav>
+            <div class="nav-left">
+                <div class="logo">
+                    <img src="https://raw.githubusercontent.com/mustafadalga/responsive-navigation-menu/master/assets/img/koala.svg" alt="Logo">
+                </div>
+                <div class="mobile-menu-icon">
+                    <div class="hamburger-menu">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                </div>
+            </div>
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Comptes</a>
+                    <div class="dropdown-content">
+                        <a href="#">Consultation des comptes</a>
+                        <a href="#">Historique des transactions</a>
+                        <a href="#">Relevés bancaires</a>
+                        <a href="#">Opérations récurrentes</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Transferts et paiements</a>
+                    <div class="dropdown-content">
+                        <a href="#">Transferts entre comptes</a>
+                        <a href="#">Virements bancaires</a>
+                        <a href="#">Paiement de factures</a>
+                        <a href="#">Gestion des bénéficiaires</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Cartes</a>
+                    <div class="dropdown-content">
+                        <a href="#">Consultation des cartes</a>
+                        <a href="#">Suivi des transactions</a>
+                        <a href="#">Activation/Désactivation des cartes</a>
+                        <a href="#">Demande de nouvelles cartes</a>
+                        <a href="#">Paramétrage des alertes</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Prêts</a>
+                    <div class="dropdown-content">
+                        <a href="#">Consultation des prêts</a>
+                        <a href="#">Demande de nouveaux prêts</a>
+                        <a href="#">Simulation de prêt</a>
+                        <a href="#">Suivi des remboursements</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Investissements</a>
+                    <div class="dropdown-content">
+                        <a href="#">Portefeuille d'investissement</a>
+                        <a href="#">Achat/Vente de titres</a>
+                        <a href="#">Produits d'épargne à terme</a>
+                        <a href="#">Conseils en investissement</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Assurances</a>
+                    <div class="dropdown-content">
+                        <a href="#">Consultation des polices d'assurance</a>
+                        <a href="#">Souscription à de nouvelles assurances</a>
+                        <a href="#">Déclaration de sinistres</a>
+                        <a href="#">Suivi des réclamations</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Services clients</a>
+                    <div class="dropdown-content">
+                        <a href="#">Messagerie sécurisée</a>
+                        <a href="#">Chat en ligne</a>
+                        <a href="#">Contact et support</a>
+                        <a href="#">FAQ</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <form action="{% url 'set_language' %}" method="post" class="language-btn" id="language-form">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <select name="language" onchange="document.getElementById('language-form').submit()">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                    {{ language.name_local }} ({{ language.code }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </li>
+            </ul>
+
+            <div class="nav-buttons">
+                {% if user_type %}
+                <button class="nav-button login-button"><a href="{% url user_type user_id%}" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Tableau de bord</a></button>
+                {% else %}
+                <button class="nav-button login-button"><a href="{% url "connexion" %}" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Connexion</a></button>
+                <button class="nav-button signup-button"><a href="{% url "register" %}" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Inscription</a></button> 
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <div class="carousel">
+        <div class="carousel-item active">
+            <img src="{% static 'image/1.jpg' %}" alt="Image 1">
+            <div class="carousel-content">
+                <h2>Bienvenue sur MaBanque</h2>
+                <p>Des solutions financières adaptées à vos besoins</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'image/i2.jpg' %}" alt="Image 2">
+            <div class="carousel-content">
+                <h2>Investissez dans votre avenir</h2>
+                <p>Découvrez nos offres d'épargne avantageuses</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{% static 'image/i3.jpg' %}" alt="Image 3">
+            <div class="carousel-content">
+                <h2>Banque en ligne sécurisée</h2>
+                <p>Gérez vos comptes en toute tranquillité</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <h2>About Company</h2>
+                <p class="subtitle">As always, partners grow with you!</p>
+                <p class="description">
+                    Temporibus autem quibusdam et aut officiis debitis is aut rerum necessitatibus saepe eveniet ut etes
+                    seo lage voluptates repudiandae sint et molestiae non mes for Creating futures through building pres
+                    preservation.
+                </p>
+            </div>
+            <div class="features">
+                <div class="feature-item">
+                    <i class="fas fa-trophy"></i>
+                    <h3>Professional</h3>
+                    <p>Lorem ipsum dolor sit , consectetur adipisci elit, sed do eiusmod tempor for enim adesg ens minim veniam.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Experienced</h3>
+                    <p>Lorem ipsum dolor sit , consectetur adipisci elit, sed do eiusmod tempor for enim adesg ens minim veniam.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-university"></i>
+                    <h3>Vibrant</h3>
+                    <p>Lorem ipsum dolor sit , consectetur adipisci elit, sed do eiusmod tempor for enim adesg ens minim veniam.</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-user"></i>
+                    <h3>Personality</h3>
+                    <p>Lorem ipsum dolor sit , consectetur adipisci elit, sed do eiusmod tempor for enim adesg ens minim veniam.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics Section -->
+    <section class="metrics-section">
+        <div class="container">
+            <div class="metrics">
+                <div class="metric-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>459</h3>
+                    <p>Projects Completed</p>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-user-tie"></i>
+                    <h3>28</h3>
+                    <p>Consultants</p>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-trophy"></i>
+                    <h3>18</h3>
+                    <p>Awards Winning</p>
+                </div>
+                <div class="metric-item">
+                    <i class="fas fa-university"></i>
+                    <h3>50</h3>
+                    <p>Years of Experiences</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+     <!-- Partners Section -->
+     <section class="partners-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Partners</h2>
+                <p>As always, partners grow with you!</p>
+            </div>
+            <div class="partners-logos">
+                <div class="logo-item">
+                    <img src="i3.jpg" alt="Partner 1">
+                </div>
+                <div class="logo-item">
+                    <img src="i2.jpg" alt="Partner 2">
+                </div>
+                <div class="logo-item">
+                    <img src="1.jpg" alt="Partner 3">
+                </div>
+                <div class="logo-item">
+                    <img src="b3.jpg" alt="Partner 4">
+                </div>
+                <div class="logo-item">
+                    <img src="b2.jpg" alt="Partner 5">
+                </div>
+                <div class="logo-item">
+                    <img src="b1.jpg" alt="Partner 6">
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+        <!-- Our Services Section -->
+    <section class="services-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Services</h2>
+                <p>As always, partners grows with you!</p>
+            </div>
+            <div class="services-carousel">
+                <div class="service-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Taxation</h3>
+                    <p>The lysine contingency it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes a single faulty enzyme.</p>
+                    <a href="#" class="learn-more">Learn More</a>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Taxation</h3>
+                    <p>The lysine contingency it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes a single faulty enzyme.</p>
+                    <a href="#" class="learn-more">Learn More</a>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Taxation</h3>
+                    <p>The lysine contingency it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes a single faulty enzyme.</p>
+                    <a href="#" class="learn-more">Learn More</a>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-chart-pie"></i>
+                    <h3>Taxation</h3>
+                    <p>The lysine contingency it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes a single faulty enzyme.</p>
+                    <a href="#" class="learn-more">Learn More</a>
+                </div>
+                <div class="service-item">
+                    <i class="far fa-calendar-alt"></i>
+                    <h3>Accumulation</h3>
+                    <p>The lysine contingency it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes a single faulty enzyme.</p>
+                    <a href="#" class="learn-more">Learn More</a>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Business Planning</h3>
+                    <p>The lysine contingency it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes a single faulty enzyme.</p>
+                    <a href="#" class="learn-more">Learn More</a>
+                </div>
+                <div class="service-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Risk Management</h3>
+                    <p>The lysine contingency it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes a single faulty enzyme.</p>
+                    <a href="#" class="learn-more">Learn More</a>
+                </div>
+            </div>
+            <div class="carousel-dots"></div>
+        </div>
+    </section>
+
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Head Office</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 1422 Aqua blue Road St. Santa Rosa,CA, USA</p>
+                    <p><i class="fas fa-envelope"></i> info@example.com</p>
+                    <p><i class="fas fa-globe"></i> info@example.com</p>
+                    <p><i class="fas fa-phone"></i> 002- 01008431112</p>
+                    <p><i class="fas fa-fax"></i> 002- 01008431112</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Company Links</h3>
+                    <ul>
+                        <li><a href="#">Our History</a></li>
+                        <li><a href="#">Mission & Vision</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">Testimonials</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>About Adidas</h3>
+                    <p>The lysine contingency - it's intended to prevent the spread of the animals is case they ever got off the island. Dr. Wu inserted a gene that makes.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Our Social</h3>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-behance"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="{% static 'js/banque.js'%}"></script>
+
+</html>

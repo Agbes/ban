@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/banque.css' %}">
+{% endblock %}
+
+{% block content %}
+    {% include 'includes/carousel.html' %}
+    {% include 'includes/about_section.html' %}
+    {% include 'includes/metrics_section.html' %}
+    {% include 'includes/partners_section.html' %}
+    {% include 'includes/services_section.html' %}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/banque.js' %}"></script>
+{% endblock %}

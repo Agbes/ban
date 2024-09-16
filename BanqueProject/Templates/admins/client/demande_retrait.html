@@ -1,0 +1,99 @@
+{% extends "admins/client/dashbord_client.html" %}
+{% load i18n %}
+
+{% block history %}
+<button id="openRetraitForm">{% trans "Demande de retrait" %}</button>
+
+<h3>{% trans "Liste de tous vos demandes de retraits" %}</h3>
+<table>
+    <thead>
+        <tr>
+            <th>{% trans "Demande" %}</th>
+            <th>{% trans "Date" %}</th>
+            <th>{% trans "Statut" %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for liste in retraits %}
+        <tr>
+            <td>{{liste.amount}} €</td>
+            <td>{{liste.created_at |date:"d/m/Y H:i"}}</td>
+            <td>{{liste.status}}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">{% trans "Aucun virement en cours." %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const openFormButton = document.getElementById('openRetraitForm');
+    
+    openFormButton.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Demande de retrait',
+            html: `
+                <form id="retraitForm">
+                    {% csrf_token %}
+                    {{ form.as_p|escapejs }}
+                </form>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Soumettre',
+            cancelButtonText: 'Annuler',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                const form = Swal.getPopup().querySelector('#retraitForm');
+                const formData = new FormData(form);
+
+                return fetch('{% url "demande_retrait" %}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        return data;
+                    } else {
+                        throw new Error(JSON.stringify(data.errors));
+                    }
+                })
+                .catch(error => {
+                    let errorMessage;
+                    try {
+                        const errorObject = JSON.parse(error.message);
+                        errorMessage = Object.entries(errorObject)
+                            .map(([key, value]) => `${key}: ${value}`)
+                            .join('\n');
+                    } catch (e) {
+                        errorMessage = error.message;
+                    }
+                    Swal.showValidationMessage(`Erreur: ${errorMessage}`);
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Succès!',
+                    text: result.value.message,
+                    icon: 'success'
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

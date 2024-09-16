@@ -1,0 +1,17 @@
+{% extends "admins/client/dashbord_client.html" %}
+{% load custom_filters i18n %}
+{% block history %}
+<h3>{% trans "Liste des messages" %}</h3>
+<ul>
+    {% for message in messages %}
+    <li>
+        <p><strong>{{ message.subject }}</strong></p> 
+        <p>{{ message.content }}</p>
+        <p class="notification-date">{{ message.timestamp | date:"d/m/Y H:i" }}</p>
+        <hr style="margin-bottom: 20px;">
+    </li>
+    {% empty %}
+    <li>{% trans "Vous n'avez aucun message." %}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

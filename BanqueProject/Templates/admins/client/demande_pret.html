@@ -1,0 +1,18 @@
+{% extends "admins/client/dashbord_client.html" %}
+{% load i18n %}
+
+{% block history %}
+<h3>{% trans "Demande de Prêt" %}</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% trans "Soumettre" %}</button>
+</form>
+{% endblock  %}
+
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+{% endblock %}

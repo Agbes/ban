@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/connexion.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <div class="auth-header">
+            <h2>Bienvenue sur MaBanque</h2>
+            <p>Connectez-vous pour commencer</p>
+        </div>
+        <div class="auth-tabs">
+            <div class="auth-tab active" data-tab="login">Connexion</div>
+        </div>
+        <div class="auth-content">
+            <form class="auth-form active" id="login-form" method="POST" action = "{% url "connexion" %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="login-username">Nom d'utilisateur</label>
+                    {{ form.username }}
+                    <div class="error" id="login-username-error"></div>                
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Mot de passe</label>
+                    {{ form.password }}
+                    <div class="error" id="login-password-error"></div>
+                </div>
+                <button type="submit" class="submit-btn">Se connecter</button>
+                <div class="success" id="login-success"></div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/connexion.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des messages de succès
+            {% if messages %}
+                {% for message in messages %}
+                    Swal.fire({
+                        icon: '{{ message.tags }}',
+                        title: '{{ message.tags|capfirst }}',
+                        text: '{{ message }}',
+                        confirmButtonText: 'OK'
+                    });
+                {% endfor %}
+            {% endif %}
+
+            // Gestion des erreurs de formulaire
+            const loginForm = document.getElementById('login-form');
+
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Empêche l'envoi du formulaire
+
+                const usernameErrorElement = document.getElementById('login-username-error');
+                const passwordErrorElement = document.getElementById('login-password-error');
+
+                const usernameError = usernameErrorElement.innerText;
+                const passwordError = passwordErrorElement.innerText;
+
+                if (usernameError || passwordError) {
+                    if (usernameError) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: usernameError,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+
+                    if (passwordError) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erreur',
+                            text: passwordError,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                } else {
+                    // Soumet le formulaire si aucune erreur n'est détectée
+                    loginForm.submit();
+                }
+            });
+        });
+    </script>
+{% endblock %}

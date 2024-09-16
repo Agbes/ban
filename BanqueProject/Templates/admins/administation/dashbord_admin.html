@@ -1,0 +1,136 @@
+{% extends "admins/base.html" %}
+
+{% block title %}Administration{% endblock %}
+
+{% block navbar %}
+<h2>Espace Administratif</h2>
+<nav>
+    <ul>
+        <li><i class="fas fa-tachometer-alt"></i> <span>Acceuille</span></li>
+        <li><i class="fas fa-tachometer-alt"></i> <span>Tableau de bord</span></li>
+        <li><i class="far fa-calendar-alt"></i> <span><a href="{% url 'dashbord_admin' request.user.id %}" style="text-decoration: none; color: white;">Les comptes</a></span></li>
+        <li><i class="fas fa-user-graduate"></i> <span><a href="{% url "compte_banque" %}" style="text-decoration: none; color: white;">Crédité un compte</a></span></li>
+        <li><i class="fas fa-book"></i> <span><a href="{% url "statut_compte" %}" style="text-decoration: none; color: white;">Status Compte</a></span></li>
+        <li><i class="fas fa-book"></i> <span><a href="{% url "statut_demande_retrait" %}" style="text-decoration: none; color: white;">Liste Retraits</a></span></li>  
+  
+        <li><i class="fas fa-book"></i> <span><a href="{% url "statut_demande_pret" %}" style="text-decoration: none; color: white;">Liste Prets</a></span></li>
+        <li><i class="fas fa-book"></i> <span><a href="{% url "send_message" %}" style="text-decoration: none; color: white;">Envoyer mail</a></span></li>  
+        <li><i class="fas fa-bell"></i> <span>Etapes de virement</span></li>
+        <li><i class="fas fa-file-invoice-dollar"></i> <span>Notifications</span></li>  
+        <li><i class="fas fa-file-invoice-dollar"></i> <span>Messages envoyés</span></li> 
+    </ul>
+</nav>
+{% endblock  %}
+
+
+{% block user-info %}
+<div class="user-avatar">A</div>
+<div class="user-details">
+    <h3>Admin Name</h3>
+    <p><i class="far fa-envelope"></i> admin@example.com</p>
+    <p><i class="fas fa-user"></i> Administrateur</p>
+</div>
+{% endblock  %}
+
+
+{% block details %}
+<h3>Emploi du temps</h3>
+<div class="salary-cards">
+    <div class="salary-card">
+        <h4>Total de compte</h4>
+        <p>150</p>
+    </div>
+    <div class="salary-card">
+        <h4>Compte active</h4>
+        <p>50</p>
+    </div>
+    <div class="salary-card">
+        <h4>Paiement</h4>
+        <p>50 comptes</p>
+        <p>Tle D</p>
+    </div>
+</div>
+{% endblock  %}
+
+
+
+{% block history %}
+
+{% endblock  %}
+
+
+
+{% block notifications %}
+<h3>Dernières messages reçus</h3>
+<ul>
+    <li>
+        <p><strong>Nouveau message reçu</strong></p>
+        <p>Vous avez reçu un nouveau message de l'administration.</p>
+        <p class="notification-date">31/08/2024 14:30</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Rappel : Réunion des enseignants</strong></p>
+        <p>N'oubliez pas la réunion des enseignants demain à 15h.</p>
+        <p class="notification-date">30/08/2024 09:15</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Mise à jour de l'emploi du temps</strong></p>
+        <p>Votre emploi du temps a été mis à jour pour la semaine prochaine.</p>
+        <p class="notification-date">29/08/2024 16:45</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Paiement reçu</strong></p>
+        <p>Votre paiement de 100 000 F CFA a été traité avec succès.</p>
+        <p class="notification-date">28/08/2024 11:20</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Nouveau cours ajouté</strong></p>
+        <p>Un nouveau cours a été ajouté à votre programme : Mathématiques avancées.</p>
+        <p class="notification-date">27/08/2024 13:0</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+</ul>
+<button class="nav-button signup-button"><a href="#" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Voir tous</a></button> 
+
+{% endblock  %}
+
+{% block message %}
+<h3>Dernières notifications</h3>
+<ul>
+    <li>
+        <p><strong>Nouveaux messages reçu</strong></p>
+        <p>Vous avez reçu un nouveau message de l'administration.</p>
+        <p class="notification-date">31/08/2024 14:30</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Rappel : Réunion des enseignants</strong></p>
+        <p>N'oubliez pas la réunion des enseignants demain à 15h.</p>
+        <p class="notification-date">30/08/2024 09:15</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Mise à jour de l'emploi du temps</strong></p>
+        <p>Votre emploi du temps a été mis à jour pour la semaine prochaine.</p>
+        <p class="notification-date">29/08/2024 16:45</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Paiement reçu</strong></p>
+        <p>Votre paiement de 100 000 F CFA a été traité avec succès.</p>
+        <p class="notification-date">28/08/2024 11:20</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+    <li>
+        <p><strong>Nouveau cours ajouté</strong></p>
+        <p>Un nouveau cours a été ajouté à votre programme : Mathématiques avancées.</p>
+        <p class="notification-date">27/08/2024 13:0</p>
+        <a href="#">lire la suite ...</a>
+    </li>
+</ul>
+<button class="nav-button signup-button"><a href="#" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Voir tous</a></button> 
+{% endblock  %}

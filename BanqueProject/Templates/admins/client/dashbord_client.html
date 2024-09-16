@@ -1,0 +1,102 @@
+{% extends "admins/base.html" %}
+{% load i18n %}
+
+{% block title %}{% translate "Administration" %}{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/css/foundation.min.css" crossorigin="anonymous">
+{% endblock %}
+{% block navbar %}
+<h2>{% translate "Espace client" %}</h2>
+<nav>
+    <ul>
+        <li><i class="fas fa-tachometer-alt"></i> <span><a href="{% url 'dashbord_user' request.user.id %}" style="text-decoration: none; color: white; white-space: nowrap;">{% translate "Tableau de bord" %}</a></span></li>
+        <li><i class="far fa-calendar-alt"></i> <span>{% trans "Vos contracts" %}</span></li>
+        <li><i class="fas fa-user-graduate"></i> <span><a href="{% url 'info_user' request.user.id %}" style="text-decoration: none; color: white;white-space: nowrap;">{% translate "Information du compte" %}</a></span></li>
+        <li><i class="fas fa-user-graduate"></i> <span><a href="{% url 'list_demande'%}" style="text-decoration: none; color: white;white-space: nowrap;">{% translate "Listes prets" %}</a></span></li>
+        <li><i class="fas fa-user-graduate"></i> <span><a href="{% url 'demande_retrait' %}" style="text-decoration: none; color: white;white-space: nowrap;">{% translate "Demande de retrait" %}</a></span></li>
+        <li><i class="fas fa-user-graduate"></i> <span><a href="{% url 'demande_pret' %}" style="text-decoration: none; color: white;white-space: nowrap;">{% translate "Demande de pret" %}</a></span></li>
+        <li><i class="fas fa-user-graduate"></i> <span><a href="{% url 'update-identite' %}" style="text-decoration: none; color: white;white-space: nowrap;">{% translate "Vérication" %}</a></span></li>
+        <li><i class="fas fa-chalkboard-teacher"></i> <span><a href="{% url 'messages' %}" style="text-decoration: none; color: white;white-space: nowrap;">{% translate "Message" %}</a></span></li>
+        <li><i class="fas fa-file-invoice-dollar"></i> <span><a href="{% url 'historiques' %}" style="text-decoration: none; color: white;white-space: nowrap;">{% translate "Historiques" %}</a></span></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block user-info %}
+
+{% if profile %}
+<div class="user-avatar">{{profile.last_name.0}}{{profile.first_name.0}}</div>
+<div class="user-details">
+    <h3>{{profile.user}}</h3>
+    <p><i class="far fa-envelope"></i> {{profile.user.email}}</p>
+    <p><i class="fas fa-user"></i> {% if is_admin %}{% translate "Administrateur" %}{% else %}{% translate "Client" %}{% endif %}</p>
+</div>
+<div class="account-info">
+    <p><strong>{% translate "Statut du compte:" %}</strong></p>
+    <p class="status-badge status-{{ profile.statut|slugify }}">{{ profile.statut }}</p>
+    {% if profile.statut == 'Non vérifier' %}
+    <p style="color: red;">
+        Vérifiez votre compte
+    </p>
+    {% endif %}
+    <p><strong>{% translate "Numéro IBAN:" %}</strong></p>
+    <p class="iban">{{identite.iban}}</p>
+</div>
+{% else %}
+<p>{% translate "Aucun profil utilisateur disponible." %}</p>
+{% endif %}
+
+{% if is_admin %}
+<div>
+    <p><strong>{% translate "Mode administrateur" %}</strong> - {% translate "Consultation du profil de" %} {{ profile.user.get_full_name }}</p>
+    <a href="{% url 'dashbord_admin' user.id %}" class="btn btn-secondary">{% translate "Retour au tableau de bord administrateur" %}</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block details %}
+<h3>{% translate "Détails du Solde et des Prêts" %}</h3>
+<div class="salary-cards">
+    <div class="salary-card">
+        <h4>{% translate "Balance" %}</h4>
+        <p>2000 €</p>
+    </div>
+    <div class="salary-card">
+        <h4>{% translate "Pret Payé" %}</h4>
+        <p>5000 €</p>
+    </div>
+    <div class="salary-card">
+        <h4>{% translate "Pret Impayé" %}</h4>
+        <p>2000 €</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block history %}
+
+{% endblock %}
+
+{% block notifications %}
+<h3>{% translate "Derniers messages" %}</h3>
+<ul class="accordion" data-accordion data-allow-all-closed="true">
+    {% for message in messages %}
+    <li class="accordion-item is-active" data-accordion-item>
+      <a href="#accordion-{{ forloop.counter }}" class="accordion-title"><strong>{{message.subject}}</strong></a>
+      <div class="accordion-content" data-tab-content id="accordion-{{ forloop.counter }}">
+        <p>{{message.content}}</p>
+        <p class="notification-date">{{message.timestamp}}</p>
+      </div>
+    </li>
+    {% empty %}
+    <li>{% translate "Vous n'avez aucun message." %}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+{% block script %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/foundation-sites@6.8.1/dist/js/foundation.min.js" crossorigin="anonymous"></script>
+<script>
+    $(document).foundation();
+</script>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% autoescape off %}
+Bonjour {{ user.username }},
+
+Veuillez cliquer sur le lien suivant pour activer votre compte :
+
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+Si vous n'avez pas demandé cette inscription, veuillez ignorer cet e-mail.
+
+Cordialement,
+Votre équipe
+{% endautoescape %}

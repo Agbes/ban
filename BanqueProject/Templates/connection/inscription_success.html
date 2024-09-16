@@ -1,0 +1,12 @@
+<div class="container">
+    <h2>Inscription réussie</h2>
+    <p>Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.</p>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <a href="#" class="btn btn-primary">Se connecter</a>
+</div>

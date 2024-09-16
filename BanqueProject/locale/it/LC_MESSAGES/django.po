@@ -1,0 +1,148 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-15 14:27+0000\n"
+"PO-Revision-Date: 2024-09-16 06:29+0000\n"
+"Last-Translator:   <>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Translated-Using: django-rosetta 0.10.0\n"
+
+#: BanqueProject/settings.py:134
+msgid "English"
+msgstr "Inglese"
+
+#: BanqueProject/settings.py:135
+msgid "French"
+msgstr "francese"
+
+#: BanqueProject/settings.py:136
+msgid "Spanish"
+msgstr "spagnolo"
+
+#: BanqueProject/settings.py:137
+msgid "Italian"
+msgstr "Italiano"
+
+#: Templates/admins/base.html:9
+msgid "Ma Banque"
+msgstr ""
+
+#: Templates/admins/base.html:58
+msgid "Déconnexion"
+msgstr "Disconnetti"
+
+#: Templates/admins/base.html:75
+msgid "Change"
+msgstr "Scambio"
+
+#: Templates/admins/client/dashbord_client.html:4
+msgid "Administration"
+msgstr "Amministrazione"
+
+#: Templates/admins/client/dashbord_client.html:9
+msgid "Espace client"
+msgstr "Area clienti"
+
+#: Templates/admins/client/dashbord_client.html:12
+msgid "Tableau de bord"
+msgstr "Pannello di controllo"
+
+#: Templates/admins/client/dashbord_client.html:13
+msgid "Vos contracts"
+msgstr "I tuoi contratti"
+
+#: Templates/admins/client/dashbord_client.html:14
+msgid "Information du compte"
+msgstr "Informazioni sull'account"
+
+#: Templates/admins/client/dashbord_client.html:15
+msgid "Listes prets"
+msgstr "Elenchi pronti"
+
+#: Templates/admins/client/dashbord_client.html:16
+msgid "Demande de retrait"
+msgstr "Richiesta di ritiro"
+
+#: Templates/admins/client/dashbord_client.html:17
+msgid "Demande de pret"
+msgstr "Richiesta di prestito"
+
+#: Templates/admins/client/dashbord_client.html:18
+msgid "Vérication"
+msgstr "Verifica"
+
+#: Templates/admins/client/dashbord_client.html:19
+msgid "Message"
+msgstr "Messaggio"
+
+#: Templates/admins/client/dashbord_client.html:20
+msgid "Historiques"
+msgstr "Storico"
+
+#: Templates/admins/client/dashbord_client.html:32
+msgid "Administrateur"
+msgstr "Amministratore"
+
+#: Templates/admins/client/dashbord_client.html:32
+msgid "Client"
+msgstr "Cliente"
+
+#: Templates/admins/client/dashbord_client.html:35
+msgid "Statut du compte:"
+msgstr "Stato dell'account:"
+
+#: Templates/admins/client/dashbord_client.html:37
+msgid "Numéro IBAN:"
+msgstr "Numero IBAN:"
+
+#: Templates/admins/client/dashbord_client.html:41
+msgid "Aucun profil utilisateur disponible."
+msgstr "Nessun profilo utente disponibile."
+
+#: Templates/admins/client/dashbord_client.html:46
+msgid "Mode administrateur"
+msgstr "Modalità amministratore"
+
+#: Templates/admins/client/dashbord_client.html:46
+msgid "Consultation du profil de"
+msgstr "Consultazione del profilo di"
+
+#: Templates/admins/client/dashbord_client.html:47
+msgid "Retour au tableau de bord administrateur"
+msgstr "Ritorna alla dashboard di amministrazione"
+
+#: Templates/admins/client/dashbord_client.html:53
+msgid "Détails du Solde et des Prêts"
+msgstr "Saldo e dettagli del prestito"
+
+#: Templates/admins/client/dashbord_client.html:56
+msgid "Balance"
+msgstr "Bilancia"
+
+#: Templates/admins/client/dashbord_client.html:60
+msgid "Pret Payé"
+msgstr "Prestito pagato"
+
+#: Templates/admins/client/dashbord_client.html:64
+msgid "Pret Impayé"
+msgstr "Prestito non pagato"
+
+#: Templates/admins/client/dashbord_client.html:75
+msgid "Derniers messages"
+msgstr "Ultimi post"
+
+#: Templates/admins/client/dashbord_client.html:86
+msgid "Vous n'avez aucun message."
+msgstr "Non hai messaggi"

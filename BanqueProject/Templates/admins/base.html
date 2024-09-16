@@ -1,0 +1,91 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% translate "Ma Banque" %} {% block title %}{% translate "Ma Banque" %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+    
+    <div class="sidebar">
+        {% block navbar %}
+
+
+        {% endblock  %}
+    </div>
+    <div class="main-content">
+        <div class="left-content">
+            <div class="user-info">
+                {% block user-info %}
+                
+                {% endblock  %}
+            </div>
+            <div class="salary-details">
+                {% block details %}
+                
+                {% endblock  %}
+            </div>
+            <div class="payment-history">
+                {% block history %}
+               
+                {% endblock  %}
+            </div>
+        </div>
+        <div class="right-content">
+            <div class="notifications">
+                {% block notifications %}
+               
+                {% endblock  %}
+            </div>
+            <hr>
+            <div class="notifications">
+                {% block message %}
+               
+                {% endblock  %}
+            </div>
+        </div>
+    </div>
+    <button class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> <a href="{% url 'logout' %}">{% translate "Déconnexion" %}<</a>
+    </button>
+
+
+    <form action="{% url 'set_language' %}" method="post" class="language-btn" id="language-form">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+        <select name="language" onchange="document.getElementById('language-form').submit()">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% get_language_info_list for LANGUAGES as languages %}
+            {% for language in languages %}
+                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                    {{ language.name_local }} ({{ language.code }})
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+    
+
+
+    
+
+    
+    
+    <script src="{% static "js/admin.js" %}"></script>
+
+    
+    {% block script %}
+    
+    {% endblock  %}
+</body>
+</html>

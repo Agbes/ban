@@ -1,0 +1,46 @@
+{% extends "admins/client/dashbord_client.html" %}
+{% load i18n %}
+
+{% block history %}
+<h3>{% trans "Initier un nouveau virement" %}</h3>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="montant">{% trans "Montant du virement" %}</label>
+        <input type="number" class="form-control" id="montant" name="montant" step="0.01" required>
+    </div>
+    <button type="submit" class="btn btn-primary">{% trans "Initier le virement" %}</button>
+</form>
+
+<div class="payment-history">
+    <h3>{% trans "Historique de paiement" %}</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Montant" %}</th>
+                <th>{% trans "Statut" %}</th>
+                <th>{% trans "Message" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for virement in virements %}
+            <tr>
+                <td>{{ virement.date_creation|date:"d/m/Y" }}</td>
+                <td>{{ virement.montant }} €</td>
+                <td>{{ virement.get_statut_display }}</td>
+                <td>
+                    {% if virement.message_admin %}
+                        {{ virement.message_admin }}
+                    {% else %}
+                        <strong>{% trans "Patienter ..." %}</strong>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <p>{% trans "Aucun virement en cours." %}</p>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

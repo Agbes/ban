@@ -1,0 +1,53 @@
+{% extends "admins/client/dashbord_client.html" %}
+{% load i18n %}
+
+{% block history %}
+<h3>{% trans "Vos informations du compte" %}</h3>
+
+<div class="profile-info">
+    <hr>
+    <h2 style="text-align: center; font-size: 20px; margin-top: 30px; color: #222;">{% trans "Informations personnelles" %}</h2>
+    <hr>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 20px;">
+        <div style="width: 48%; margin-bottom: 10px;">
+            <p><strong>{% trans "Nom et prénom" %}:</strong> {{ profile.user.get_full_name }}</p>
+            <p><strong>{% trans "Email" %}:</strong> {{ profile.user.email }}</p>
+            <p><strong>{% trans "Date de naissance" %}:</strong> {{ profile.birth_date }}</p>
+            <p><strong>{% trans "Lieu de naissance" %}:</strong> {{ profile.birth_place }}</p>
+        </div>
+        <div style="width: 48%; margin-bottom: 10px;">
+            <p><strong>{% trans "Nationalité" %}:</strong> {{ profile.nationality }}</p>
+            <p><strong>{% trans "Genre" %}:</strong> {{ profile.get_gender_display }}</p>
+            <p><strong>{% trans "Adresse" %}:</strong> {{ profile.address }}</p>
+            <p><strong>{% trans "Téléphone" %}:</strong> {{ profile.phone }}</p>
+            <p><strong>{% trans "Numéro d'identification" %}:</strong> {{ profile.id_number }}</p>
+            <p><strong>{% trans "Numéro de sécurité sociale" %}:</strong> {{ profile.ssn }}</p>
+        </div>
+    </div>
+    <hr>
+    <h2 style="text-align: center; font-size: 20px; margin-top: 30px; color: #222;">{% trans "Informations professionnelles" %}</h2>
+    <hr>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 20px;">
+        <div style="width: 48%; margin-bottom: 10px;">
+            <p><strong>{% trans "Profession" %}:</strong> {{ profile.get_profession_display }}</p>
+            <p><strong>{% trans "Revenu" %}:</strong> {{ profile.income }} €</p>
+        </div>
+        <div style="width: 48%; margin-bottom: 10px;">
+            <p><strong>{% trans "Source de revenu" %}:</strong> {{ profile.income_source }}</p>
+            <p><strong>{% trans "IBAN" %}:</strong> {{ identite.iban }}</p> 
+            <p><strong>{% trans "Numéro de piece d'identité" %}:</strong> {{ identite.number_carte_passport }}</p>
+        </div>
+    </div>
+    <hr>
+    <h2 style="text-align: center; font-size: 20px; margin-top: 30px; color: #222;">{% trans "Photo d'identité" %}</h2>
+    <hr>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 20px;">
+        {% if identite.id_photo %}
+            <img src="{{ identite.id_photo.url }}" alt="{% trans 'Photo d\'identité' %}" style="max-width: 200px;">
+        {% else %}
+            <p>{% trans "Aucune photo d'identité téléchargée." %}</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

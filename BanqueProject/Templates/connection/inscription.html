@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/inscription.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form class="registration-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-header">
+            <h2>Inscription à Ma Banque En Ligne</h2>
+            <p>Veuillez remplir tous les champs pour créer votre compte</p>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-step active">1. Informations personnelles</div>
+            <div class="progress-step">2. Coordonnées</div>
+            <div class="progress-step">3. Vérification d'identité</div>
+            <div class="progress-step">4. Informations financières</div>
+            <div class="progress-step">5. Connexion</div>
+            <div class="progress-step">6. Accords</div>
+        </div>
+        <div class="form-content">
+            <div class="form-step active" data-step="1">
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Nom d'utilisateur</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Prénoms</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Nom de fammile</label>
+                    {{ form.last_name }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.birth_date.id_for_label }}">Date de naissance</label>
+                    {{ form.birth_date }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.birth_place.id_for_label }}">Lieu de naissance</label>
+                    {{ form.birth_place }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.nationality.id_for_label }}">Nationalité</label>
+                    {{ form.nationality }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.gender.id_for_label }}">Genre</label>
+                    {{ form.gender }}
+                </div>
+            </div>
+            
+            <div class="form-step" data-step="2">
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}">Adresse postale complète</label>
+                    {{ form.address }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Numéro de téléphone</label>
+                    {{ form.phone }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Adresse email</label>
+                    {{ form.email }}
+                </div>
+            </div>
+            
+            
+            
+            <div class="form-step" data-step="4">
+                <div class="form-group">
+                    <label for="{{ form.income.id_for_label }}">Revenu mensuel ou annuel</label>
+                    {{ form.income }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.income_source.id_for_label }}">Source de revenus</label>
+                    {{ form.income_source }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.profession.id_for_label }}">Situation professionnelle</label>
+                    {{ form.profession }}
+                </div>
+            </div>
+            
+            <div class="form-step" data-step="5">
+                <div class="form-group">
+                    <label for="{{ form.password1.id_for_label }}">Mot de passe</label>
+                    {{ form.password1 }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.password2.id_for_label }}">Confirmer le mot de passe</label>
+                    {{ form.password2 }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.security_question.id_for_label }}">Question de sécurité</label>
+                    {{ form.security_question }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.security_answer.id_for_label }}">Réponse à la question de sécurité</label>
+                    {{ form.security_answer }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.pin.id_for_label }}">Code PIN (4 chiffres)</label>
+                    {{ form.pin }}
+                </div>
+            </div>
+            
+            <div class="form-step" data-step="6">
+                <div class="form-group">
+                    <label>
+                        {{ form.terms }} J'accepte les conditions générales
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        {{ form.consent }} Je consens au traitement de mes données personnelles
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        {{ form.confirmation }} Je confirme l'exactitude des informations fournies
+                    </label>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button type="button" class="btn" id="prevBtn">Précédent</button>
+                <button type="button" class="btn" id="nextBtn">Suivant</button>
+                <button type="submit" class="btn" id="submitBtn" style="display: none;">S'inscrire</button>
+            </div>
+
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/inscription.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% if alert_type and alert_message %}
+    <script>
+        let errors = '';
+        {% if form_errors %}
+            errors = JSON.parse('{{ form_errors|escapejs }}');
+        {% endif %}
+
+        let errorMessage = '{{ alert_message }}';
+        if (errors) {
+            errorMessage += '<ul>';
+            for (const [field, fieldErrors] of Object.entries(errors)) {
+                fieldErrors.forEach(error => {
+                    errorMessage += `<li>${field}: ${error.message}</li>`;
+                });
+            }
+            errorMessage += '</ul>';
+        }
+
+        Swal.fire({
+            icon: '{{ alert_type }}',  // 'success' or 'error'
+            title: 'Erreur',
+            html: errorMessage,
+            showConfirmButton: true
+        });
+    </script>
+    {% endif %}
+{% endblock %}

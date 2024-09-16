@@ -1,0 +1,105 @@
+{% load i18n %}
+
+<div class="nav-left">
+    <div class="logo">
+        <a href="{% url "home" %}"><img src="https://raw.githubusercontent.com/mustafadalga/responsive-navigation-menu/master/assets/img/koala.svg" alt="Logo"></a>
+    </div>
+    <div class="mobile-menu-icon">
+        <div class="hamburger-menu">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </div>
+</div>
+<ul>
+    <!--li class="dropdown">
+        <a href="#">Comptes</a>
+        <div class="dropdown-content">
+            <a href="#">Consultation des comptes</a>
+            <a href="#">Historique des transactions</a>
+            <a href="#">Relevés bancaires</a>
+            <a href="#">Opérations récurrentes</a>
+        </div>
+    </li-->
+    <li class="dropdown">
+        <a href="#">Transferts et paiements</a>
+        <div class="dropdown-content">
+            <a href="#">Transferts entre comptes</a>
+            <a href="#">Virements bancaires</a>
+            <a href="#">Paiement de factures</a>
+            <a href="#">Gestion des bénéficiaires</a>
+        </div>
+    </li>
+    <li class="dropdown">
+        <a href="#">Cartes</a>
+        <div class="dropdown-content">
+            <a href="#">Consultation des cartes</a>
+            <a href="#">Suivi des transactions</a>
+            <a href="#">Activation/Désactivation des cartes</a>
+            <a href="#">Demande de nouvelles cartes</a>
+            <a href="#">Paramétrage des alertes</a>
+        </div>
+    </li>
+    <li class="dropdown">
+        <a href="#">Prêts</a>
+        <div class="dropdown-content">
+            <a href="#">Consultation des prêts</a>
+            <a href="#">Demande de nouveaux prêts</a>
+            <a href="#">Simulation de prêt</a>
+            <a href="#">Suivi des remboursements</a>
+        </div>
+    </li>
+    <li class="dropdown">
+        <a href="#">Investissements</a>
+        <div class="dropdown-content">
+            <a href="#">Portefeuille d'investissement</a>
+            <a href="#">Achat/Vente de titres</a>
+            <a href="#">Produits d'épargne à terme</a>
+            <a href="#">Conseils en investissement</a>
+        </div>
+    </li>
+    <li class="dropdown">
+        <a href="#">Assurances</a>
+        <div class="dropdown-content">
+            <a href="#">Consultation des polices d'assurance</a>
+            <a href="#">Souscription à de nouvelles assurances</a>
+            <a href="#">Déclaration de sinistres</a>
+            <a href="#">Suivi des réclamations</a>
+        </div>
+    </li>
+    <li class="dropdown">
+        <a href="#">Services clients</a>
+        <div class="dropdown-content">
+            <a href="#">Messagerie sécurisée</a>
+            <a href="#">Chat en ligne</a>
+            <a href="#">Contact et support</a>
+            <a href="#">FAQ</a>
+        </div>
+    </li>
+    <li class="dropdown">
+        <form action="{% url 'set_language' %}" method="post" class="language-btn" id="language-form">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.get_full_path }}">
+            <select name="language" onchange="document.getElementById('language-form').submit()">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                    <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                        {{ language.name_local }} ({{ language.code }})
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    </li>
+</ul>
+
+<div class="nav-buttons">
+    {% if user_type %}
+    <button class="nav-button login-button"><a href="{% url user_type user_id%}" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Tableau de bord</a></button>
+    {% else %}
+    <button class="nav-button login-button"><a href="{% url "connexion" %}" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Connexion</a></button>
+    <button class="nav-button signup-button"><a href="{% url "register" %}" style="color: white; text-decoration: none; font-weight: bold; font-size: 20px;">Inscription</a></button> 
+    {% endif %}
+</div>
