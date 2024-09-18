@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseForbidden
 from functools import wraps
-from .models import Identite, UserProfile, Virement, Message
+from .models import CompteBancaire, Identite, UserProfile, Virement, Message
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +24,10 @@ def add_common_data(view_func):
 
         virements = Virement.objects.filter(user=users).order_by('-date_creation')
         messages_user = Message.objects.filter(recipients=user_profile).order_by('-timestamp')
-
+        compte_banquaire_user = CompteBancaire.objects.get(user=user_profile)
         common_context = {
+            'users':users,
+            'compte_banquaire_user': compte_banquaire_user,
             'profile': user_profile,
             'is_admin': users.is_superuser,
             'virements': virements,

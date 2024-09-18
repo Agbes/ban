@@ -25,7 +25,7 @@
 {% block user-info %}
 
 {% if profile %}
-<div class="user-avatar">{{profile.last_name.0}}{{profile.first_name.0}}</div>
+<div class="user-avatar">{{users.last_name.0}}{{users.first_name.0}}</div>
 <div class="user-details">
     <h3>{{profile.user}}</h3>
     <p><i class="far fa-envelope"></i> {{profile.user.email}}</p>
@@ -59,15 +59,15 @@
 <div class="salary-cards">
     <div class="salary-card">
         <h4>{% translate "Balance" %}</h4>
-        <p>2000 €</p>
+        <p>{{compte_banquaire_user.solde}}€</p>
     </div>
     <div class="salary-card">
         <h4>{% translate "Pret Payé" %}</h4>
-        <p>5000 €</p>
+        <p>0.00 €</p>
     </div>
     <div class="salary-card">
         <h4>{% translate "Pret Impayé" %}</h4>
-        <p>2000 €</p>
+        <p>0.00 €</p>
     </div>
 </div>
 {% endblock %}

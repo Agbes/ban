@@ -38,14 +38,15 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'gilchristagbessi92@gmail.com'
 EMAIL_HOST_PASSWORD = 'abpw otfh dllf iylw'  # Utilisez le mot de passe d'application ici
 
+DEFAULT_FROM_EMAIL = 'AGBESSI Gilchrist gilchristagbessi92@gmail.com'
+SERVER_EMAIL = 'gilchristagbessi92@gmail.com'
+NO_REPLY_EMAIL = 'noreply@example.com'
 
 # Pour définir la durée de la session à 7 jours
 SESSION_COOKIE_AGE = 7 * 24 * 60 * 60  # 7 jours en secondes
 
 # Paramètres supplémentaires pour l'envoi d'e-mails
-DEFAULT_FROM_EMAIL = 'AGBESSI Gilchrist gilchristagbessi92@gmail.com'
-SERVER_EMAIL = 'gilchristagbessi92@gmail.com'
-NO_REPLY_EMAIL = 'noreply@example.com'
+
 
 
 
@@ -166,7 +167,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STRIPE_SECRET_KEY_TEST = 'sk_test_51KSdusCrWcSq8gbyUhRFKyLQ0kf9yiIMTziQf5wlYDEsfZwVvfqw0UAAl5Q1d5JlHrGuB3Lj5Xld8DSZDdoGjzlv00kmj0vCEd'
 PRODUCT_PRICE = 'price_1Pw8MxCrWcSq8gbyl3gz5ndR'
-REDIRECT_DOMAIN = 'http://3.143.168.100:8000/'
+REDIRECT_DOMAIN = 'http://127.0.0.1:8000/' #'http://3.143.168.100:8000/'
 STRIPE_WEBHOOK_SECRET_TEST = 'whsec_d06e4ca494d842c0b4f433bd1d621999824684d55d48d9b29debd328a6dcfa01'
 STRIPE_PUBLIC_KEY_TEST = "pk_test_51KSdusCrWcSq8gbyrsMCGYGCJXOJw1DyWFyv28duXcwa9aLNo2pifWsuI6UUdU448g52UE9ojPsAbcHjnEf3S8wD00wMTKSpqO"
 

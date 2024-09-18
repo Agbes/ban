@@ -3,7 +3,7 @@ from .models import UserProfile, Identite, DemandePret, CrediteCompte, Virement,
 
 @register(UserProfile)
 class UserProfileTranslationOptions(TranslationOptions):
-    fields = ('first_name', 'last_name', 'birth_place', 'nationality', 'address', 'income_source', 'profession')
+    fields = ('birth_place', 'nationality', 'address', 'income_source', 'profession')
 
 @register(Identite)
 class IdentiteTranslationOptions(TranslationOptions):

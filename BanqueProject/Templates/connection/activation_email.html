@@ -1,12 +1,25 @@
-{% autoescape off %}
-Bonjour {{ user.username }},
-
-Veuillez cliquer sur le lien suivant pour activer votre compte :
-
-http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
-
-Si vous n'avez pas demandé cette inscription, veuillez ignorer cet e-mail.
-
-Cordialement,
-Votre équipe
-{% endautoescape %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activation de votre compte</title>
+</head>
+<body>
+    <p style="color: #666666;
+            margin: 10px 0;
+            font-size: 20px;">Bonjour {{ user.username }},</p>
+    <p>Merci de vous être inscrit. Veuillez cliquer sur le lien suivant pour activer votre compte :</p>
+    <p><a href="http://{{ domain }}/activate/{{ uid }}/{{ token }}" style="display: inline-block;
+        background-color: #007bff;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin: 20px 0;">Activer mon compte</a></p>
+    <p style="color: #666666;
+    margin: 10px 0;
+    font-size: 20px;">Merci,</p>
+    <p style="color: #666666;
+    margin: 10px 0;
+    font-size: 20px;">L'équipe</p>
+</body>
+</html>

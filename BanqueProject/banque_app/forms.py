@@ -1,63 +1,152 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.forms.widgets import ClearableFileInput
-
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from .models import CompteBancaire, DemandePret, DemandeRetrait, Identite, UserProfile, Message
 
 from django.db import transaction
 
 class UserProfileForm(UserCreationForm):
-    birth_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    birth_place = forms.CharField(max_length=255)
-    nationality = forms.CharField(max_length=100)
-    first_name = forms.CharField(max_length=255)
-    last_name = forms.CharField(max_length=100)
-    gender = forms.ChoiceField(choices=UserProfile.GENDER_CHOICES)
-    address = forms.CharField(max_length=255)
-    phone = forms.CharField(max_length=20)
-    email = forms.EmailField()
-    income = forms.DecimalField(max_digits=10, decimal_places=2)
-    income_source = forms.CharField(max_length=255, required=False)
-    profession = forms.ChoiceField(choices=UserProfile.PROFESSION_CHOICES)
-    security_question = forms.CharField(max_length=255)
-    security_answer = forms.CharField(max_length=255)
-    pin = forms.CharField(max_length=4, widget=forms.PasswordInput)
-    terms = forms.BooleanField(required=True)
-    consent = forms.BooleanField(required=True)
-    confirmation = forms.BooleanField(required=True)
+    username = forms.CharField(
+        label=_("Nom d'utilisateur"),
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    first_name = forms.CharField(
+        label=_("Prénoms"),
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    last_name = forms.CharField(
+        label=_("Nom de famille"),
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    birth_date = forms.DateField(
+        label=_("Date de naissance"),
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+        required=True
+    )
+    birth_place = forms.CharField(
+        label=_("Lieu de naissance"),
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    nationality = forms.CharField(
+        label=_("Nationalité"),
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    gender = forms.ChoiceField(
+        label=_("Genre"),
+        choices=UserProfile.GENDER_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    address = forms.CharField(
+        label=_("Adresse postale complète"),
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    phone = forms.CharField(
+        label=_("Numéro de téléphone"),
+        max_length=15,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    email = forms.EmailField(
+        label=_("Adresse email"),
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    income = forms.DecimalField(
+        label=_("Revenu mensuel ou annuel"),
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    income_source = forms.CharField(
+        label=_("Source de revenus"),
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+
+    profession =forms.ChoiceField(
+        label=_("Situation professionnelle"),
+        choices=UserProfile.PROFESSION_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    password1 = forms.CharField(
+        label=_("Mot de passe"),
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    password2 = forms.CharField(
+        label=_("Confirmer le mot de passe"),
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    security_question = forms.CharField(
+        label=_("Question de sécurité"),
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    security_answer = forms.CharField(
+        label=_("Réponse à la question de sécurité"),
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    pin = forms.CharField(
+        label=_("Code PIN (4 chiffres)"),
+        max_length=4,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'number'}),
+        required=True
+    )
+    terms = forms.BooleanField(
+        label=_("J'accepte les conditions générales"),
+        required=True
+    )
+    consent = forms.BooleanField(
+        label=_("Je consens au traitement de mes données personnelles"),
+        required=True
+    )
+    confirmation = forms.BooleanField(
+        label=_("Je confirme l'exactitude des informations fournies"),
+        required=True
+    )
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('username','last_name','first_name', 'email', 'password1', 'password2')
 
     @transaction.atomic  # Use transactions to ensure data consistency
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data['email']
-        
+
         if commit:
             user.save()
-            # Use get_or_create to avoid IntegrityError
-            user_profile, created = UserProfile.objects.get_or_create(
+            # Create UserProfile immediately after saving the user
+            UserProfile.objects.create(
                 user=user,
-                defaults={
-                    'birth_date': self.cleaned_data['birth_date'],
-                    'birth_place': self.cleaned_data['birth_place'],
-                    'nationality': self.cleaned_data['nationality'],
-                    'gender': self.cleaned_data['gender'],
-                    'address': self.cleaned_data['address'],
-                    'phone': self.cleaned_data['phone'],
-                    'income': self.cleaned_data['income'],
-                    'income_source': self.cleaned_data['income_source'],
-                    'profession': self.cleaned_data['profession'],
-                    'terms': self.cleaned_data['terms'],
-                    'consent': self.cleaned_data['consent'],
-                    'confirmation': self.cleaned_data['confirmation']
-                }
+                birth_date=self.cleaned_data['birth_date'],
+                birth_place=self.cleaned_data['birth_place'],
+                nationality=self.cleaned_data['nationality'],
+                gender=self.cleaned_data['gender'],
+                address=self.cleaned_data['address'],
+                phone=self.cleaned_data['phone'],
+                income=self.cleaned_data['income'],
+                income_source=self.cleaned_data['income_source'],
+                profession=self.cleaned_data['profession'],
+                terms=self.cleaned_data['terms'],
+                consent=self.cleaned_data['consent'],
+                confirmation=self.cleaned_data['confirmation']
             )
         return user
-
 
     
 

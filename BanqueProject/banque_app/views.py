@@ -33,7 +33,7 @@ from bitpay.models.facade import Facade
 
 
 from banque_app.decoration import add_common_data
-from banque_app.forms import CreditForm, CryptoPaymentForm, CustomAuthenticationForm, DemandePretForm, DemandeRetraitForm, IdentiteForm, MessageForm, UserProfileForm
+from banque_app.forms import CreditForm, CryptoPaymentForm, CustomAuthenticationForm, DemandePretForm, DemandeRetraitForm, IdentiteForm, MessageForm,UserProfileForm
 from .utils import send_standard_email, send_activation_email, handle_attachments
 from .models import Attachment, CompteBancaire, CryptoPayment, DemandePret, DemandeRetrait, Identite, PaymentHistory, UserPayment, UserProfile, Virement, Message
 from django.contrib.auth.models import User
@@ -53,38 +53,27 @@ def home(request):
 def register(request):
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES)
-
         if form.is_valid():
-            user = User.objects.create_user(
-                username=form.cleaned_data['username'],
-                email=form.cleaned_data['email'],
-                password=form.cleaned_data['password1']
-            )
+            user = form.save(commit=False)
             user.is_active = False
             user.save()
-
-            # Use get_or_create() to prevent IntegrityError if a profile already exists
-            profile, created = UserProfile.objects.get_or_create(
+            profile = UserProfile.objects.create(
                 user=user,
-                defaults={
-                    'first_name': form.cleaned_data['first_name'],
-                    'last_name': form.cleaned_data['last_name'],
-                    'birth_date': form.cleaned_data['birth_date'],
-                    'birth_place': form.cleaned_data['birth_place'],
-                    'nationality': form.cleaned_data['nationality'],
-                    'gender': form.cleaned_data['gender'],
-                    'address': form.cleaned_data['address'],
-                    'phone': form.cleaned_data['phone'],
-                    'income': form.cleaned_data['income'],
-                    'income_source': form.cleaned_data['income_source'],
-                    'profession': form.cleaned_data['profession'],
-                    'terms': form.cleaned_data['terms'],
-                    'consent': form.cleaned_data['consent'],
-                    'confirmation': form.cleaned_data['confirmation']
-                }
+                birth_date=form.cleaned_data['birth_date'],
+                birth_place=form.cleaned_data['birth_place'],
+                nationality=form.cleaned_data['nationality'],
+                gender=form.cleaned_data['gender'],
+                address=form.cleaned_data['address'],
+                phone=form.cleaned_data['phone'],
+                income=form.cleaned_data['income'],
+                income_source=form.cleaned_data['income_source'],
+                profession=form.cleaned_data['profession'],
+                terms=form.cleaned_data['terms'],
+                consent=form.cleaned_data['consent'],
+                confirmation=form.cleaned_data['confirmation']
             )
-
             # Appeler la fonction d'envoi d'email
+            print(f"user.email     {user.email}")
             send_activation_email(user, request)
 
             return render(request, 'connection/inscription.html', {

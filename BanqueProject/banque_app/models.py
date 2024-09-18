@@ -26,8 +26,6 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField(null=True, blank=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
     birth_place = models.CharField(max_length=255)
     nationality = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
@@ -53,7 +51,7 @@ class Identite(models.Model):
     number_carte_passport = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.user.username} - {self.cnss}"
+        return f"{self.user.user.username} - {self.cnss}"
 
 
 class DemandePret(models.Model):
@@ -153,12 +151,12 @@ class Virement(models.Model):
 
 
 class CompteBancaire(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
     numero_compte = models.CharField(max_length=20, unique=True)
     solde = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"Compte {self.numero_compte} de {self.user.first_name}"
+        return f"Compte {self.numero_compte} de {self.user.user.last_name}"
     
 
 class DemandeRetrait(models.Model):

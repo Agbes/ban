@@ -3,6 +3,7 @@ from django.core.mail import EmailMessage as DjangoEmailMessage
 import logging
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
@@ -58,22 +59,23 @@ def send_standard_email(message, recipients, attachments):
     
     
 def send_activation_email(user, request):
-    current_site = get_current_site(request)
-    mail_subject = 'Activez votre compte'
-    message = render_to_string('connection/activation_email.html', {
+    subject = 'Activation de votre compte'
+    context = {
         'user': user,
-        'domain': current_site.domain,
+        'domain': request.get_host(),
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': default_token_generator.make_token(user),
-    })
+    }
+    html_message = render_to_string('connection/activation_email.html', context)
+    plain_message = render_to_string('connection/activation_email.html', context)  # Optional: plain text version
 
-    send_email(
-        subject=mail_subject,
-        body=message,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to_emails=[user.email]
+    send_mail(
+        subject,
+        plain_message,  # Ensure message is provided
+        'from@example.com',  # Ensure from_email is provided
+        [user.email],  # Ensure recipient_list is provided
+        html_message=html_message
     )
-    
     
 def handle_attachments(message, attachments):
     """

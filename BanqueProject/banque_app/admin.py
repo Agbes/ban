@@ -3,8 +3,8 @@ from .models import UserProfile, Identite, DemandePret, CrediteCompte, Virement,
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'first_name', 'last_name', 'birth_date', 'profession', 'statut')
-    search_fields = ('user__username', 'first_name', 'last_name', 'phone', 'address')
+    list_display = ('user', 'birth_date', 'profession', 'statut')
+    search_fields = ('user__username', 'phone', 'address')
     list_filter = ('gender', 'profession', 'statut')
 
 @admin.register(Identite)
